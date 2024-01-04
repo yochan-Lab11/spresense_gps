@@ -1,8 +1,8 @@
 // TODO:
 // BLE デバイスのサービスUUIDとキャラクタリスティックUUIDの
 // 設定をお願いします。
-const BLUETOOTH_SERVICE_UUID = "0x3802";
-const BLUETOOTH_CHARACTERISTIC_UUID = "0x4a02";
+const BLUETOOTH_SERVICE_UUID = "00003802-0000-1000-8000-00805f9b34fb";
+const BLUETOOTH_CHARACTERISTIC_UUID = "00004a02-0000-1000-8000-00805f9b34fb";
 
 let globalMap = null;
 let globalCharacteristic = null;
