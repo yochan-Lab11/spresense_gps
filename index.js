@@ -7,6 +7,23 @@ const BLUETOOTH_CHARACTERISTIC_UUID = "0x4a02";
 let globalMap = null;
 let globalCharacteristic = null;
 
+/* ---------- Debug Code ---------- */
+const _console = console;
+
+const writeLog = (message) => {
+  const ul = document.getElementById("log");
+  const li = document.createElement("li");
+  li.appendChild(document.createTextNode(message));
+  ul.appendChild(li);
+};
+
+console = {
+  error: (message) => { writeLog('[ERROR] ' + message) }, 
+  log: (message) => { writeLog('[LOG] ' + message) }, 
+};
+
+/* ------------------------------ */
+
 function getCurrentPosition(options) {
   return new Promise((resolve, reject) => 
     navigator.geolocation.getCurrentPosition(resolve, reject, options)
