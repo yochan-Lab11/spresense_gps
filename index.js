@@ -61,7 +61,7 @@ async function initMap() {
   // NOTE:
   // 初期表示時に現在地にマーカーをセットするには
   // 以下のコメントアウトを外します
-  // addMarker(lat, lng, 'current position');
+  addMarker(lat, lng, 'current position');
 }
 
 function addMarker(lat, lng, title) {
