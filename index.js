@@ -90,7 +90,7 @@ function parseBluetoothData(byteArray) {
 function handleBluetoothNotifications(event) {
   const value = event.target.value;
   const { latitude, longitude } = parseBluetoothData(value);
-  console.log('Latitude:', latitude, 'Longitude:', longitude);
+  console.log('Latitude:' + latitude + 'Longitude:' + longitude);
 
   addMarker(latitude, longitude, 'Bluetooth Device position');
 }
@@ -114,7 +114,7 @@ async function requestBluetoothDevice() {
       handleBluetoothNotifications
     );
   } catch (error) {
-    console.error('Error requesting Bluetooth device:', error);
+    console.error('Error requesting Bluetooth device: ' + error);
   }
 }
 
