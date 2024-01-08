@@ -7,6 +7,13 @@ const BLUETOOTH_CHARACTERISTIC_UUID = "00004a02-0000-1000-8000-00805f9b34fb";
 let globalMap = null;
 let globalCharacteristic = null;
 let globalBluetoothDeviceMarker = null;
+let globalCurrentPositionMarker = null;
+let globalWatchID = null;
+
+// NOTE:
+// マーカーのアイコンを変えるには以下のページから別のアイコンのURLを指定下さい。
+// https://www.google.com/maps/d/viewer?mid=1icXjgXJ5da1l2BQjMNgXAI4dlkw&hl=en_US&ll=-0.00700000003837741%2C0.0030000000000196536&z=16
+const CURRENT_POSITION_ICON = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
 
 /* ---------- Debug Code ---------- */
 const _console = console;
@@ -35,7 +42,7 @@ function getCurrentPosition(options) {
 async function initMap() {
   const options = {
     enableHighAccuracy: true,
-    timeout: 5000,
+    timeout: 10000,
     maximumAge: 0,
   };
 
@@ -59,12 +66,30 @@ async function initMap() {
     zoom: 15
   });
 
-  // NOTE:
-  // マーカーのアイコンを変えるには以下のページから別のアイコンのURLを指定下さい。
-  // https://www.google.com/maps/d/viewer?mid=1icXjgXJ5da1l2BQjMNgXAI4dlkw&hl=en_US&ll=-0.00700000003837741%2C0.0030000000000196536&z=16
-  const icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+  globalCurrentPositionMarker = addMarker(
+    lat, lng, 'current position', CURRENT_POSITION_ICON
+  );
 
-  addMarker(lat, lng, 'current position', icon);
+  // NOTE:
+  // 位置情報の精度を上げるため、watchPosition で現在地のマーカーを更新する
+  globalWatchID = navigator.geolocation.watchPosition(onSuccess, onError, options);
+}
+
+function onSuccess(position) {
+  lat = position.coords.latitude;
+  lng = position.coords.longitude;
+
+  if (globalCurrentPositionMarker) {
+    globalCurrentPositionMarker.setMap(null);
+  }
+
+  globalCurrentPositionMarker = addMarker(
+    lat, lng, 'current position', CURRENT_POSITION_ICON
+  );
+}
+
+function onError(err) {
+  console.error(`Failed to watchPosition ERROR(${err.code}): ${err.message}`);
 }
 
 function addMarker(lat, lng, title, icon) {
