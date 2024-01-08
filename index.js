@@ -6,6 +6,7 @@ const BLUETOOTH_CHARACTERISTIC_UUID = "00004a02-0000-1000-8000-00805f9b34fb";
 
 let globalMap = null;
 let globalCharacteristic = null;
+let globalBluetoothDeviceMarker = null;
 
 /* ---------- Debug Code ---------- */
 const _console = console;
@@ -59,19 +60,27 @@ async function initMap() {
   });
 
   // NOTE:
-  // 初期表示時に現在地にマーカーをセットするには
-  // 以下のコメントアウトを外します
-  addMarker(lat, lng, 'current position');
+  // マーカーのアイコンを変えるには以下のページから別のアイコンのURLを指定下さい。
+  // https://www.google.com/maps/d/viewer?mid=1icXjgXJ5da1l2BQjMNgXAI4dlkw&hl=en_US&ll=-0.00700000003837741%2C0.0030000000000196536&z=16
+  const icon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+
+  addMarker(lat, lng, 'current position', icon);
 }
 
-function addMarker(lat, lng, title) {
+function addMarker(lat, lng, title, icon) {
   // Add a marker for the provided location
   const mapLatLng = new google.maps.LatLng(lat, lng);
-  const marker = new google.maps.Marker({
+  const params = {
     position: mapLatLng,
     map: globalMap,
     title: title,
-  });
+  };
+  
+  if (icon) {
+    params['icon'] = icon;
+  }
+
+  return new google.maps.Marker(params);
 }
 
 function parseBluetoothData(byteArray) {
@@ -92,7 +101,12 @@ function handleBluetoothNotifications(event) {
   const { latitude, longitude } = parseBluetoothData(value);
   console.log('Latitude:' + latitude + 'Longitude:' + longitude);
 
-  addMarker(latitude, longitude, 'Bluetooth Device position');
+  // Clear old Bluetooth Device Marker
+  if (globalBluetoothDeviceMarker) {
+    globalBluetoothDeviceMarker.setMap(null);
+  }
+
+  globalBluetoothDeviceMarker = addMarker(latitude, longitude, 'Bluetooth Device position');
 }
 
 // Request Bluetooth device
