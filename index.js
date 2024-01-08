@@ -42,7 +42,7 @@ function getCurrentPosition(options) {
 async function initMap() {
   const options = {
     enableHighAccuracy: true,
-    timeout: 10000,
+    timeout: 50000,
     maximumAge: 0,
   };
 
